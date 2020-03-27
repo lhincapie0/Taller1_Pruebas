@@ -1,14 +1,18 @@
 package co.edu.icesi.fi.tics.tssc.services;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.edu.icesi.fi.tics.tssc.exceptions.NotEnoughGroupsException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NotEnoughSprintsException;
-import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingGame;
+import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingGameException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingTopic;
 import co.edu.icesi.fi.tics.tssc.exceptions.NullGameException;
+import co.edu.icesi.fi.tics.tssc.exceptions.NullTopicException;
 import co.edu.icesi.fi.tics.tssc.model.TsscGame;
+import co.edu.icesi.fi.tics.tssc.model.TsscStory;
 import co.edu.icesi.fi.tics.tssc.model.TsscTopic;
 import co.edu.icesi.fi.tics.tssc.repositories.GameRepository;
 import co.edu.icesi.fi.tics.tssc.repositories.TopicRepository;
@@ -50,26 +54,65 @@ public class GameServiceImpl implements GameService{
 	}
 
 	@Override
-	public TsscGame editGame(TsscGame game) throws NotExistingGame, NullGameException, NotEnoughGroupsException, NotEnoughSprintsException {
+	public TsscGame editGame(TsscGame game) throws NotExistingGameException, NullGameException, NotEnoughGroupsException, NotEnoughSprintsException, NotExistingTopic {
 
 		if(game != null)
 		{
-			if(gameRepository.getGame(game.getId()) != null)
+			TsscGame existingGame = gameRepository.getGame(game.getId());
+			if(existingGame != null)
 			{
+				
 				if(game.getNGroups()>0)
 				{
 					if(game.getNSprints()>0)
 					{
-						 gameRepository.editGame(game);
-						 return game;
+						if(game.getTsscTopic() != null)
+						{
+							if(topicRepository.getTopic(game.getTsscTopic().getId()) != null)
+							{
+								gameRepository.editGame(game);
+								return game;
+							}else throw new NotExistingTopic();
+						}else
+						{
+							gameRepository.editGame(game);
+							return game;
+						}
 					}else throw new NotEnoughSprintsException();
 				}else throw new NotEnoughGroupsException();
 				
-			}else throw new NotExistingGame();
+			}else throw new NotExistingGameException();
 			
 		}else throw new NullGameException();
 		
 		
 	}
 
+	public TsscGame saveGame2(TsscGame game, TsscTopic topic) throws NotEnoughGroupsException, 
+	NotEnoughSprintsException, NullGameException, NotExistingTopic, NullTopicException{
+		if(game!=null)
+		{
+			if(game.getNGroups()>0)
+			{
+				if(game.getNSprints()>0)
+				{
+					//The topic is obligatory, so we changed it, because it the first method it was optional.
+					if(topic!= null)
+					{
+						if(topicRepository.getTopic(topic.getId()) != null)
+						{
+						
+							ArrayList<TsscStory> stories =(ArrayList<TsscStory>) topic.getTsscStories();
+							game.setTsscStories(stories);
+							gameRepository.saveGame(game);
+							return game;
+						}else throw new NotExistingTopic();
+					}else throw new NullTopicException();
+					
+				}else throw new NotEnoughSprintsException();
+			}else throw new NotEnoughGroupsException();
+		}else throw new NullGameException();
+	}
+
+	
 }

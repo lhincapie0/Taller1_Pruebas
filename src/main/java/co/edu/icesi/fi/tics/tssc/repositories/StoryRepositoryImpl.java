@@ -14,15 +14,22 @@ public class StoryRepositoryImpl implements StoryRepository{
 		stories = new HashMap<Long, TsscStory>();
 	}
 	@Override
-	public void saveStory(TsscStory story) {
+	public TsscStory saveStory(TsscStory story) {
 		stories.put(story.getId(),story);
+		return story;
 	}
 
 	@Override
-	public void editStory(TsscStory story) {
+	public TsscStory editStory(TsscStory story) {
 		TsscStory existingStory = stories.get(story.getId());
 		stories.replace(story.getId(), story, existingStory);
-
+		return story;
+	}
+	
+	@Override
+	public TsscStory getStory(Long id) {
+		return stories.get(id);
+		
 	}
 
 }

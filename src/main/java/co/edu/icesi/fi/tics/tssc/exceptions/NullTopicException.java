@@ -4,7 +4,7 @@ public class NullTopicException extends Exception {
 	
 	public NullTopicException()
 	{
-		super("Null Topic");
+		super("Null Story");
 	}
 	
 	

@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+
 import org.hibernate.criterion.NullExpression;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,11 +22,12 @@ import org.mockito.Spy;
 
 import co.edu.icesi.fi.tics.tssc.exceptions.NotEnoughGroupsException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NotEnoughSprintsException;
-import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingGame;
+import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingGameException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingTopic;
 import co.edu.icesi.fi.tics.tssc.exceptions.NullGameException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NullTopicException;
 import co.edu.icesi.fi.tics.tssc.model.TsscGame;
+import co.edu.icesi.fi.tics.tssc.model.TsscStory;
 import co.edu.icesi.fi.tics.tssc.model.TsscTopic;
 import co.edu.icesi.fi.tics.tssc.repositories.GameRepository;
 import co.edu.icesi.fi.tics.tssc.repositories.TopicRepository;
@@ -135,7 +138,7 @@ public class GameTest {
 	public void editTest1()
 	{
 		when(mockGame.editGame(game)).thenReturn(null);
-		assertThrows(NotExistingGame.class, ()-> gameService.editGame(game));
+		assertThrows(NotExistingGameException.class, ()-> gameService.editGame(game));
 		//It is 0 because it tried to interact but it didn´t return anything
 		verify(mockGame, times(0)).editGame(game);
 	}
@@ -168,9 +171,36 @@ public class GameTest {
 		when(mockGame.getGame(game.getId())).thenReturn(game);
 		assertThrows(NotEnoughSprintsException.class, () -> gameService.editGame(game));
 		verify(mockGame, times(0)).editGame(game);
+	}
+	
+	@Test
+	@DisplayName("An unexisting topic is added in the edition")
+	public void editTest5()
+	{
+		when(mockGame.getGame(game.getId())).thenReturn(game);
+		when(mockTopic.getTopic((long) 123.0)).thenReturn(null);
+		game.setTsscTopic(topic);
+		assertThrows(NotExistingTopic.class, () -> gameService.editGame(game));
+		verify(mockGame, times(0)).editGame(game);
 
 	}
 	
+	
+	@Test
+	@DisplayName("An existing topic is added in the edition - Successsful")
+	public void editTest6()
+	{
+		when(mockGame.getGame(game.getId())).thenReturn(game);
+		when(mockTopic.getTopic((long) 123.0)).thenReturn(topic);
+		game.setTsscTopic(topic);
+		try {
+			assertEquals(game, gameService.editGame(game));
+		} catch (NotExistingGameException | NullGameException | NotEnoughGroupsException | NotEnoughSprintsException e) {
+		} catch (NotExistingTopic e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	@Test
 	@DisplayName("Successful editting")
 	public void editTest7()
@@ -179,8 +209,30 @@ public class GameTest {
 		game.setName("Game 33");
 		try {
 			assertEquals(game, gameService.editGame(game));
-		} catch (NotExistingGame | NullGameException | NotEnoughGroupsException | NotEnoughSprintsException e) {
+		} catch (NotExistingGameException | NullGameException | NotEnoughGroupsException | NotEnoughSprintsException e) {
+		} catch (NotExistingTopic e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 		
+	
+	@Test
+	@DisplayName("Successful addition with topic")
+	public void save2Test1()
+	{
+		ArrayList<TsscStory> stories = new ArrayList<>();
+		stories.add(new TsscStory());
+		stories.add(new TsscStory());
+		topic.setTsscStories(stories);
+		game.setTsscTopic(topic);
+		when(mockTopic.getTopic((long) 123.0)).thenReturn(topic);
+
+		
+		try {
+			assertEquals(game, gameService.saveGame(game, topic));
+		} catch (NotEnoughGroupsException | NotEnoughSprintsException | NullGameException | NotExistingTopic e) {
+			e.printStackTrace();
+		}
+	}
 }
