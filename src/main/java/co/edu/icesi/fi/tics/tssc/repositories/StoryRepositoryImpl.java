@@ -1,0 +1,28 @@
+package co.edu.icesi.fi.tics.tssc.repositories;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import co.edu.icesi.fi.tics.tssc.model.TsscSprint;
+import co.edu.icesi.fi.tics.tssc.model.TsscStory;
+
+public class StoryRepositoryImpl implements StoryRepository{
+
+	private Map<Long, TsscStory> stories;	
+
+	public StoryRepositoryImpl() {
+		stories = new HashMap<Long, TsscStory>();
+	}
+	@Override
+	public void saveStory(TsscStory story) {
+		stories.put(story.getId(),story);
+	}
+
+	@Override
+	public void editStory(TsscStory story) {
+		TsscStory existingStory = stories.get(story.getId());
+		stories.replace(story.getId(), story, existingStory);
+
+	}
+
+}
