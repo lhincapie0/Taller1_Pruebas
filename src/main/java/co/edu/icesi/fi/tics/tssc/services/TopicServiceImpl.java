@@ -15,7 +15,7 @@ public class TopicServiceImpl implements TopicService{
 	private TopicRepository topicRepository;
 
 	@Override
-	public void saveTopic(TsscTopic topic) throws NullTopicException, NotEnoughGroupsException, NotEnoughSprintsException{
+	public TsscTopic saveTopic(TsscTopic topic) throws NullTopicException, NotEnoughGroupsException, NotEnoughSprintsException{
 		if(topic != null)
 		{
 			if(topic.getDefaultGroups()>0)
@@ -23,6 +23,7 @@ public class TopicServiceImpl implements TopicService{
 				if(topic.getDefaultSprints()>0)
 				{
 					topicRepository.saveTopic(topic);
+					return topic;
 				}else throw new NotEnoughSprintsException();
 			}else throw new NotEnoughGroupsException();
 				
@@ -31,12 +32,21 @@ public class TopicServiceImpl implements TopicService{
 	}
 
 	@Override
-	public void editTopic(TsscTopic topic) throws NullTopicException, NotExistingTopic {
+	public TsscTopic editTopic(TsscTopic topic) throws NullTopicException, NotExistingTopic, NotEnoughSprintsException, NotEnoughGroupsException{
 		if(topic != null)
 		{
 			if(topicRepository.getTopic(topic.getId()) != null)
 			{
-				topicRepository.editTopic(topic);
+				if(topic.getDefaultGroups()>0)
+				{
+					if(topic.getDefaultSprints()>0)
+					{
+						topicRepository.editTopic(topic);
+						
+					}else throw new NotEnoughSprintsException();
+				}else throw new NotEnoughGroupsException();
+				
+				return topic;
 			}else throw new NotExistingTopic();
 		}else throw new NullTopicException();
 	}

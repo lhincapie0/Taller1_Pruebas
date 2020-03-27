@@ -8,7 +8,7 @@ import co.edu.icesi.fi.tics.tssc.model.TsscTopic;
 
 public interface TopicService {
 	
-	public void saveTopic(TsscTopic topic) throws NullTopicException, NotEnoughGroupsException, NotEnoughSprintsException;
-	public void editTopic(TsscTopic topic) throws NullTopicException, NotExistingTopic;
+	public TsscTopic saveTopic(TsscTopic topic) throws NullTopicException, NotEnoughGroupsException, NotEnoughSprintsException;
+	public TsscTopic editTopic(TsscTopic topic) throws NullTopicException, NotExistingTopic, NotEnoughSprintsException, NotEnoughGroupsException;
 
 }

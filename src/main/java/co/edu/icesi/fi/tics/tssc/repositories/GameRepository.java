@@ -4,8 +4,8 @@ import co.edu.icesi.fi.tics.tssc.model.TsscGame;
 
 public interface GameRepository {
 	
-	public void saveGame(TsscGame game);
-	public void editGame(TsscGame game);
+	public TsscGame saveGame(TsscGame game);
+	public TsscGame editGame(TsscGame game);
 	public TsscGame getGame(Long id);
 
 }

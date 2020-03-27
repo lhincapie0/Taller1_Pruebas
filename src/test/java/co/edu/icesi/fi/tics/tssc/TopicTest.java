@@ -1,5 +1,6 @@
 package co.edu.icesi.fi.tics.tssc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,6 +43,8 @@ public class TopicTest {
 		topic.setId(11111);
 		topic.setName("Tema 1");
 		topic.setGroupPrefix("t1");
+
+		
 		
 	}
 	
@@ -77,7 +80,7 @@ public class TopicTest {
 	}
 	
 	@Test
-	@DisplayName("Good creation")
+	@DisplayName("Successful addition")
 	public void saveTest4()
 	{
 		topic.setDefaultGroups(4);
@@ -85,7 +88,8 @@ public class TopicTest {
 		when(mock.saveTopic(topic)).thenReturn(topic);
 
 		try {
-			topicService.saveTopic(topic);
+			
+			assertEquals(topic, topicService.saveTopic(topic));
 			
 		} catch (NullTopicException e) {
 		} catch (NotEnoughGroupsException e) {
@@ -97,10 +101,11 @@ public class TopicTest {
 	@Test 
 	@DisplayName("Not existing topic for editting")
 	public void editTest1() {
+		when(mock.editTopic(topic)).thenReturn(null);
 		assertThrows(NotExistingTopic.class, ()-> topicService.editTopic(topic));
+		//It is 0 because it tried to interact but it didn´t return anything
 		verify(mock, times(0)).editTopic(topic);
-		//The zero interactions doesn´t work here because inside the method the service accesses to the repository to check if there is an existing topic 
-		//	verifyZeroInteractions(mock);
+		
 
 	}
 	
@@ -112,27 +117,51 @@ public class TopicTest {
 		verifyZeroInteractions(mock);
 	}
 	
+	@Test
+	@DisplayName("Not enough games edited")
+	public void editTest3()
+	{
+		when(mock.getTopic(topic.getId())).thenReturn(topic);
+		topic.setName("Edited topic");
+		topic.setDefaultGroups(0);
+		assertThrows(NotEnoughGroupsException.class, ()-> topicService.editTopic(topic));
+		verify(mock, times(0)).editTopic(topic);
+	}
+	
+	@Test
+	@DisplayName("Not enough springs edited")
+	public void editTest4()
+	{
+		{
+			when(mock.getTopic(topic.getId())).thenReturn(topic);
+
+			topic.setName("Edited topic");
+			topic.setDefaultSprints(0);
+			topic.setDefaultGroups(2);
+			assertThrows(NotEnoughSprintsException.class, ()-> topicService.editTopic(topic));
+			verify(mock, times(0)).editTopic(topic);
+		}
+	}
+	
+	
 	@Test 
-	@DisplayName("Good topic for editting")
-	public void editTest3() {
+	@DisplayName("Successful editting")
+	public void editTest5() {
 		topic.setDefaultSprints(4);
 		topic.setDefaultGroups(3);
 
 		try {
 			topicService.saveTopic(topic);
 			topic.setName("Edited topic");
-			topicService.editTopic(topic);
+			topic.setDefaultGroups(3);
+			topic.setDefaultSprints(2);
+		
+			assertEquals(topic, topicService.editTopic(topic));
 			verify(mock, times(1)).editTopic(topic);
 
 		} catch (NullTopicException |NotEnoughGroupsException | NotEnoughSprintsException | NotExistingTopic e ) {
 			
 		}
-		//when(mock.editTopic(topic)).thenReturn(topic);
-
-
-		
-
-
 	}
 	
 }

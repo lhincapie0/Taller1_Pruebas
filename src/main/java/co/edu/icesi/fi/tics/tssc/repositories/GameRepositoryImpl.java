@@ -3,8 +3,11 @@ package co.edu.icesi.fi.tics.tssc.repositories;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import co.edu.icesi.fi.tics.tssc.model.TsscGame;
 
+@Repository
 public class GameRepositoryImpl implements GameRepository {
 
 	private Map<Long, TsscGame> games;	
@@ -16,18 +19,18 @@ public class GameRepositoryImpl implements GameRepository {
 	
 	
 	@Override
-	public void saveGame(TsscGame game) {
+	public TsscGame saveGame(TsscGame game) {
 		
 		games.put(game.getId(), game);
-	
+		return game;
 
 	}
 
 	@Override
-	public void editGame(TsscGame game) {
+	public TsscGame editGame(TsscGame game) {
 		TsscGame existingGame = games.get(game.getId());
 		games.replace(game.getId(), game, existingGame);
-		
+		return game;
 	}
 
 

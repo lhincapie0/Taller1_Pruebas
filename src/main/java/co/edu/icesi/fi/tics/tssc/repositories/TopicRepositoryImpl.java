@@ -3,8 +3,11 @@ package co.edu.icesi.fi.tics.tssc.repositories;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import co.edu.icesi.fi.tics.tssc.model.TsscTopic;
 
+@Repository
 public class TopicRepositoryImpl implements TopicRepository{
 
 	private Map<Long, TsscTopic> topics;	
