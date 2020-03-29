@@ -1,5 +1,6 @@
 package co.edu.icesi.fi.tics.tssc.IntegrationTests;
 
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,6 +26,7 @@ import co.edu.icesi.fi.tics.tssc.exceptions.NotEnoughSprintsException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingGameException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NotExistingTopic;
 import co.edu.icesi.fi.tics.tssc.exceptions.NullGameException;
+import co.edu.icesi.fi.tics.tssc.exceptions.NullTopicException;
 import co.edu.icesi.fi.tics.tssc.model.TsscGame;
 import co.edu.icesi.fi.tics.tssc.model.TsscStory;
 import co.edu.icesi.fi.tics.tssc.model.TsscTimecontrol;
@@ -32,13 +34,14 @@ import co.edu.icesi.fi.tics.tssc.model.TsscTopic;
 import co.edu.icesi.fi.tics.tssc.repositories.GameRepository;
 import co.edu.icesi.fi.tics.tssc.repositories.TopicRepository;
 import co.edu.icesi.fi.tics.tssc.services.GameService;
+import co.edu.icesi.fi.tics.tssc.services.GameServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
 public class GameTest2 {
 
-	private GameService gameService;
+	private GameServiceImpl gameService;
 	
 	private GameRepository gameRepository;
 	
@@ -50,7 +53,7 @@ public class GameTest2 {
 	
 	
 	@Autowired
-	public GameTest2(GameService gameService, GameRepository gameRepository, TopicRepository topicRepository)
+	public GameTest2(GameServiceImpl gameService, GameRepository gameRepository, TopicRepository topicRepository)
 	{
 		this.gameService = gameService;
 		this.gameRepository = gameRepository;
@@ -96,16 +99,18 @@ public class GameTest2 {
 	{
 		
 		try {
-			gameService.saveGame(game, topic);
-		} catch (NotEnoughGroupsException | NotEnoughSprintsException | NullGameException | NotExistingTopic e) {
+			gameService.saveGame2(game, topic);
+		} catch (NotEnoughGroupsException | NotEnoughSprintsException | NullGameException | NotExistingTopic | NullTopicException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertSame(game,gameRepository.getGame(game.getId()));
 
-		System.out.println(topic.getTsscStories());
-		System.out.println(game.getTsscStories());
-		assertSame(topic.getTsscStories(), game.getTsscStories());
+		assertNotSame(topic.getTsscStories(), gameRepository.getGame(game.getId()).getTsscStories());
+		assertEquals(topic.getTsscStories(), gameRepository.getGame(game.getId()).getTsscStories());
+		assertNotSame(topic.getTsscTimecontrols(), gameRepository.getGame(game.getId()).getTsscTimecontrols());
+		assertEquals(topic.getTsscTimecontrols(), gameRepository.getGame(game.getId()).getTsscTimecontrols());
+
 
 		
 

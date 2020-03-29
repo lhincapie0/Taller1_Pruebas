@@ -230,9 +230,14 @@ public class GameTest {
 
 		
 		try {
-			assertEquals(game, gameService.saveGame(game, topic));
-		} catch (NotEnoughGroupsException | NotEnoughSprintsException | NullGameException | NotExistingTopic e) {
+			assertEquals(game, gameService.saveGame2(game, topic));
+		} catch (NotEnoughGroupsException | NotEnoughSprintsException | NullGameException | NotExistingTopic | NullTopicException e) {
 			e.printStackTrace();
 		}
 	}
+	
+
 }
+
+
+

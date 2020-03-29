@@ -104,10 +104,19 @@ public class GameServiceImpl implements GameService{
 						{
 						
 							ArrayList<TsscStory> stories =(ArrayList<TsscStory>) topic.getTsscStories();
-							game.setTsscStories(stories);
-							
+							ArrayList<TsscStory> st = new ArrayList<TsscStory>();
+							for(int i = 0; i<stories.size();i++)
+							{
+								st.add(stories.get(i));
+							}
+							game.setTsscStories(st);
 							ArrayList<TsscTimecontrol> timecontrols =(ArrayList<TsscTimecontrol>) topic.getTsscTimecontrols();
-							game.setTsscTimecontrol(timecontrols);
+							ArrayList<TsscTimecontrol> tc = new ArrayList<TsscTimecontrol>();
+							for(int i = 0;i<timecontrols.size();i++)
+							{
+								tc.add(timecontrols.get(i));
+							}
+							game.setTsscTimecontrol(tc);
 							gameRepository.saveGame(game);
 							return game;
 						}else throw new NotExistingTopic();
