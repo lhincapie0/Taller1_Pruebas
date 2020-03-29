@@ -45,7 +45,7 @@ public class TsscTopic implements Serializable {
 	@JsonIgnore
 	private List<TsscStory> tsscStories;
 		
-	@OneToMany
+	@OneToMany(mappedBy ="tsscTopic")
 	@JsonIgnore
 	private List<TsscTimecontrol> tsscTimeControls;
 

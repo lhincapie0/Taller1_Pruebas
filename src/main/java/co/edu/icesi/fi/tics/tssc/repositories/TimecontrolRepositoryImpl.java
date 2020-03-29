@@ -2,8 +2,12 @@ package co.edu.icesi.fi.tics.tssc.repositories;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import co.edu.icesi.fi.tics.tssc.model.TsscTimecontrol;
 
+@Repository
 public class TimecontrolRepositoryImpl implements TimecontrolRepository {
 
 	private Map<Long, TsscTimecontrol> timecontrols;	

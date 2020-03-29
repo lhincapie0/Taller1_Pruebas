@@ -13,6 +13,7 @@ import co.edu.icesi.fi.tics.tssc.exceptions.NullGameException;
 import co.edu.icesi.fi.tics.tssc.exceptions.NullTopicException;
 import co.edu.icesi.fi.tics.tssc.model.TsscGame;
 import co.edu.icesi.fi.tics.tssc.model.TsscStory;
+import co.edu.icesi.fi.tics.tssc.model.TsscTimecontrol;
 import co.edu.icesi.fi.tics.tssc.model.TsscTopic;
 import co.edu.icesi.fi.tics.tssc.repositories.GameRepository;
 import co.edu.icesi.fi.tics.tssc.repositories.TopicRepository;
@@ -43,8 +44,8 @@ public class GameServiceImpl implements GameService{
 					{
 						if(topicRepository.getTopic(topic.getId()) != null)
 						{
-							gameRepository.saveGame(game);
 							game.setTsscTopic(topic);
+							gameRepository.saveGame(game);
 							return game;	
 						}else throw new NotExistingTopic();
 					}
@@ -104,6 +105,9 @@ public class GameServiceImpl implements GameService{
 						
 							ArrayList<TsscStory> stories =(ArrayList<TsscStory>) topic.getTsscStories();
 							game.setTsscStories(stories);
+							
+							ArrayList<TsscTimecontrol> timecontrols =(ArrayList<TsscTimecontrol>) topic.getTsscTimecontrols();
+							game.setTsscTimecontrol(timecontrols);
 							gameRepository.saveGame(game);
 							return game;
 						}else throw new NotExistingTopic();

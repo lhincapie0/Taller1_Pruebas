@@ -1,4 +1,4 @@
-package co.edu.icesi.fi.tics.tssc;
+package co.edu.icesi.fi.tics.tssc.UnitTests;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

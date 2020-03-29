@@ -3,9 +3,12 @@ package co.edu.icesi.fi.tics.tssc.repositories;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import co.edu.icesi.fi.tics.tssc.model.TsscSprint;
 import co.edu.icesi.fi.tics.tssc.model.TsscStory;
 
+@Repository
 public class StoryRepositoryImpl implements StoryRepository{
 
 	private Map<Long, TsscStory> stories;	

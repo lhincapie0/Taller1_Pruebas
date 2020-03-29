@@ -1,4 +1,4 @@
-package co.edu.icesi.fi.tics.tssc;
+package co.edu.icesi.fi.tics.tssc.UnitTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
