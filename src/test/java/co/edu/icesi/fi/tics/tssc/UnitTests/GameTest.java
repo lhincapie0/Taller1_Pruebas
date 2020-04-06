@@ -216,25 +216,7 @@ public class GameTest {
 		}
 	}
 		
-	
-	@Test
-	@DisplayName("Successful addition with topic")
-	public void save2Test1()
-	{
-		ArrayList<TsscStory> stories = new ArrayList<>();
-		stories.add(new TsscStory());
-		stories.add(new TsscStory());
-		topic.setTsscStories(stories);
-		game.setTsscTopic(topic);
-		when(mockTopic.getTopic((long) 123.0)).thenReturn(topic);
 
-		
-		try {
-			assertEquals(game, gameService.saveGame2(game, topic));
-		} catch (NotEnoughGroupsException | NotEnoughSprintsException | NullGameException | NotExistingTopic | NullTopicException e) {
-			e.printStackTrace();
-		}
-	}
 	
 
 }
